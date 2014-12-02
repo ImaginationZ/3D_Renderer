@@ -510,6 +510,7 @@ int GzFreeRender(GzRender *render)
 -free all renderer resources
 */
 	free(render);
+	render->matlevel = 0;
 
 	return GZ_SUCCESS;
 }

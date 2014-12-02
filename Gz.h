@@ -105,3 +105,6 @@ typedef struct  GzInput
 
 #define U       0        /* array indicies for texture coords */
 #define V       1
+
+#define	AAKERNEL_SIZE	6
+#define	AAFILTER_WEIGHT	2

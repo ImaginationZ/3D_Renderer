@@ -33,9 +33,6 @@ const bool IsModelReflective[MODEL_COUNT] = {
 #define OUTFILE "output.ppm"
 #define EM_OUTFILE	"em_output.ppm"
 
-#define	AAKERNEL_SIZE	6
-#define	AAFILTER_WEIGHT	2
-
 const float AAFilter[AAKERNEL_SIZE][3] = // X-shift, Y-shift, weight
 {
 	-0.52, 0.38, 0.128, 		0.41, 0.56, 0.119,		0.27, 0.08, 0.294,
@@ -243,6 +240,12 @@ int ApplicationFinal::Render()
 	char		dummy[256]; 
 	int			status; 
 
+	//clean before re-rendering
+	for (int aaPass = 0; aaPass < AAKERNEL_SIZE; aaPass++) {
+		GzInitDisplay(m_pAADisplays[aaPass]);
+	}
+	GzInitDisplay(m_pDisplay);
+
 	GzDisplay* emDisplay;
 	int		    xRes, yRes;	/* display parameters */ 
 	int emWidth = m_nWidth * 4;
@@ -404,8 +407,7 @@ int ApplicationFinal::Clean()
 	* Clean up and exit 
 	*/ 
 	int	status = 0; 
-
-	status |= GzFreeRender(m_pRender); 
+	
 	status |= GzFreeDisplay(m_pDisplay);
 	status |= GzFreeTexture();
 
