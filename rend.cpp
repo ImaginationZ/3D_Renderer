@@ -947,6 +947,7 @@ int GetReflectionAcrossNormal(GzRender* render, GzCoord worldPos, GzCoord worldN
 
 	GzCoord incident;
 	VectorSubtract(worldPos, render->camera.position, incident);
+	VectorNormalize(incident);
 
 	float nDotE = VectorDotProduct(worldNorm, incident);
 
