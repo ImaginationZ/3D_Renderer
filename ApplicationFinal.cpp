@@ -264,12 +264,12 @@ int ApplicationFinal::Render()
 
 	//TODO: dummy array will be replaced with real environment map
 	float dummyEmColors[6][7] = {
-		256, 512, 0, 256, 4000, 2000, 0,
-		0, 256, 256, 512, 2000, 2000, 0,
-		256, 512, 256, 512, 2000, 2000, 2000,
-		256, 512, 512, 768, 0, 2000, 0,
-		512, 768, 256, 512, 2000, 4000, 2000,
-		768, 1024, 256, 512, 4000, 0, 4000
+		m_nWidth, m_nWidth * 2, 0, m_nWidth, 4000, 2000, 0,
+		0, m_nWidth, m_nWidth, m_nWidth * 2, 2000, 2000, 0,
+		m_nWidth, m_nWidth * 2, m_nWidth, m_nWidth * 2, 2000, 2000, 2000,
+		m_nWidth, m_nWidth * 2, m_nWidth * 2, m_nWidth * 3, 0, 2000, 0,
+		m_nWidth * 2, m_nWidth * 3, m_nWidth, m_nWidth * 2, 2000, 4000, 2000,
+		m_nWidth * 3, m_nWidth * 4, m_nWidth, m_nWidth * 2, 4000, 0, 4000
 	};
 	for (int faceIndex = 0; faceIndex < 6; faceIndex++) {
 		for (int x = dummyEmColors[faceIndex][0]; x < dummyEmColors[faceIndex][1]; x++) {

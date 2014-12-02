@@ -191,31 +191,31 @@ int cubetex_fun(GzCoord reflection, GzColor color) {
 		textureX = (reflection[Z] / reflection[X]);
 		textureY = (reflection[Y] / reflection[X]);
 		if (reflection[X] >= 0) {
-			faceOffsetX = 512;
-			faceOffsetY = 256;
+			faceOffsetX = cubeWidth * 2;
+			faceOffsetY = cubeWidth;
 		} else {
 			faceOffsetX = 0;
-			faceOffsetY = 256;
+			faceOffsetY = cubeWidth;
 		}
 	} else if (absY > absX && absY > absZ) {
 		textureX = (reflection[X] / reflection[Y]);
 		textureY = (reflection[Z] / reflection[Y]);
 		if (reflection[Y] >= 0) {
-			faceOffsetX = 256;
+			faceOffsetX = cubeWidth;
 			faceOffsetY = 0;
 		} else {
-			faceOffsetX = 256;
-			faceOffsetY = 512;
+			faceOffsetX = cubeWidth;
+			faceOffsetY = cubeWidth * 2;
 		}
 	} else {
 		textureX = (reflection[X] / reflection[Z]);
 		textureY = (reflection[Y] / reflection[Z]);
 		if (reflection[Z] >= 0) {
-			faceOffsetX = 256;
-			faceOffsetY = 256;
+			faceOffsetX = cubeWidth;
+			faceOffsetY = cubeWidth;
 		} else {
-			faceOffsetX = 768;
-			faceOffsetY = 256;
+			faceOffsetX = cubeWidth * 3;
+			faceOffsetY = cubeWidth;
 		}
 	}
 	textureX = (scaleToPositiveRange(textureX) * (cubeWidth - 1)) + faceOffsetX;
