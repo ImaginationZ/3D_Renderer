@@ -29,8 +29,16 @@ const char* ModelFiles[MODEL_COUNT] = {
 	"plane.asc"
 };
 bool IsModelReflective[MODEL_COUNT] = {
-	true,
+	false,
 	false
+};
+
+#define TEX_NONE 0
+#define TEX_FILE 1
+#define TEX_PROC 2
+const int ModelTextures[MODEL_COUNT] = {
+	TEX_NONE,
+	TEX_PROC
 };
 
 const float AAFilter[AAKERNEL_SIZE][3] = // X-shift, Y-shift, weight
@@ -305,10 +313,18 @@ int ApplicationFinal::Render()
 			valueListShader[0] = (GzPointer)true;
 			nameListShader[1]  = GZ_CUBE_MAP;
 			valueListShader[1] = (GzPointer)(cubetex_fun);
-		} else {
+		} else if (ModelTextures[fileIndex] == TEX_FILE) {
+			valueListShader[0] = (GzPointer)false;
+			nameListShader[1]  = GZ_TEXTURE_MAP;
+			valueListShader[1] = (GzPointer)(tex_fun);
+		} else if (ModelTextures[fileIndex] == TEX_PROC) {
 			valueListShader[0] = (GzPointer)false;
 			nameListShader[1]  = GZ_TEXTURE_MAP;
 			valueListShader[1] = (GzPointer)(ptex_fun);
+		} else {
+			valueListShader[0] = (GzPointer)false;
+			nameListShader[1]  = GZ_TEXTURE_MAP;
+			valueListShader[1] = 0;
 		}
 
 		for (int aaPass = 0; aaPass < AAKERNEL_SIZE; aaPass++) {
