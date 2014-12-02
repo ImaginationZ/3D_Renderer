@@ -30,7 +30,9 @@ BEGIN_MESSAGE_MAP(CCS580HWView, CView)
 	ON_COMMAND(IDM_ROTATE, OnRotate)
 	ON_COMMAND(IDM_TRANSLATE, OnTranslate)
 	ON_COMMAND(IDM_SCALE, OnScale)
+	ON_COMMAND(ID_MATERIAL_REFLECTIVE, OnMaterialReflective)
 	//}}AFX_MSG_MAP
+	ON_UPDATE_COMMAND_UI(ID_MATERIAL_REFLECTIVE, &CCS580HWView::OnUpdateMaterialReflective)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -40,6 +42,7 @@ CCS580HWView::CCS580HWView()
 {
 	// TODO: add construction code here
 	m_pApplication = NULL;
+	m_isReflective = false;
 }
 
 CCS580HWView::~CCS580HWView()
@@ -312,4 +315,17 @@ void CCS580HWView::OnScale()
 			GzPushMatrix(m_pApplication->m_pAARenders[aaPass], scaleMat); 
 		}
 	}
+}
+
+
+void CCS580HWView::OnMaterialReflective()
+{
+	m_isReflective = !m_isReflective;
+	m_pApplication->SetReflective(m_isReflective);
+}
+
+
+void CCS580HWView::OnUpdateMaterialReflective(CCmdUI *pCmdUI)
+{
+	pCmdUI->SetCheck(m_isReflective);
 }

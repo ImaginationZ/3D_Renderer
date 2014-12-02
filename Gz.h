@@ -108,3 +108,4 @@ typedef struct  GzInput
 
 #define	AAKERNEL_SIZE	6
 #define	AAFILTER_WEIGHT	2
+

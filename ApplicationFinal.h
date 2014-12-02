@@ -20,6 +20,7 @@ public:
 	int	Initialize();
 	virtual int Render(); 
 	int Clean();
+	int SetReflective(bool);
 };
 
 #endif // !defined(AFX_APPLICATION5_H__43A7FA9C_6CD6_4A79_9567_2354BFEFAFFB__INCLUDED_)

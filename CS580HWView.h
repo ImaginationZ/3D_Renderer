@@ -26,6 +26,7 @@ public:
 public:
 	Application* m_pApplication;
 	void DrawFrameBuffer(CDC *pDC);
+	bool m_isReflective;
 
 // Overrides
 	// ClassWizard generated virtual function overrides
@@ -55,6 +56,9 @@ protected:
 	afx_msg void OnScale();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnMaterialReflective();
+	afx_msg void OnUpdateMaterialReflective(CCmdUI *pCmdUI);
 };
 
 #ifndef _DEBUG  // debug version in CS580HWView.cpp

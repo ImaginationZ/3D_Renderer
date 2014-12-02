@@ -20,18 +20,18 @@ static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
 #endif
 
+#define OUTFILE "output.ppm"
+#define EM_OUTFILE	"em_output.ppm"
+
 #define MODEL_COUNT	2
 const char* ModelFiles[MODEL_COUNT] = {
 	"ppot.asc",
 	"plane.asc"
 };
-const bool IsModelReflective[MODEL_COUNT] = {
+bool IsModelReflective[MODEL_COUNT] = {
 	true,
 	false
 };
-
-#define OUTFILE "output.ppm"
-#define EM_OUTFILE	"em_output.ppm"
 
 const float AAFilter[AAKERNEL_SIZE][3] = // X-shift, Y-shift, weight
 {
@@ -399,6 +399,12 @@ void FinishAA(GzDisplay** aaDisplays, GzDisplay* outputDisplay)
 			GzPutDisplay(outputDisplay, x, y, finalR, finalG, finalB, finalA, 0);
 		}
 	}
+}
+
+int ApplicationFinal::SetReflective(bool isReflective) 
+{
+	IsModelReflective[0] = isReflective;
+	return GZ_SUCCESS;
 }
 
 int ApplicationFinal::Clean()
