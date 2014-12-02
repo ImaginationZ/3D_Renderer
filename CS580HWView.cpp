@@ -192,14 +192,6 @@ void CCS580HWView::OnRotate()
 	// TODO: Add your command handler code here
 	CRotateDlg dlg;
 	GzInput* input;
-	GzMatrix	rotMat = 
-	{ 
-		1.0,	0.0,	0.0,	0.0, 
-		0.0,	1.0,	0.0,	0.0, 
-		0.0,	0.0,	1.0,	0.0, 
-		0.0,	0.0,	0.0,	1.0 
-	};
-
 
 	if(m_pApplication == NULL) return;
 
@@ -214,26 +206,31 @@ void CCS580HWView::OnRotate()
 	{
 		// Update input rotation value
 		input->rotation[dlg.m_nAxis] = dlg.m_fRot;
-				
-		//  Create Rotation Matrix 
-		switch(dlg.m_nAxis)
-		{
-		case 0 :
-			// Create matrix for Rot X
-			GzRotXMat(input->rotation[0], rotMat);
-			break;
-		case 1:
-			// Create matrix for Rot Y
-			GzRotYMat(input->rotation[1], rotMat);
-			break;
-		case 2:
-			// Create matrix for Rot Z
-			GzRotZMat(input->rotation[2], rotMat);
-			break;
-		}
 
 		// Accumulate matrix
 		for (int aaPass = 0; aaPass < AAKERNEL_SIZE; aaPass++) {
+			GzMatrix	rotMat = 
+			{ 
+				1.0,	0.0,	0.0,	0.0, 
+				0.0,	1.0,	0.0,	0.0, 
+				0.0,	0.0,	1.0,	0.0, 
+				0.0,	0.0,	0.0,	1.0 
+			};
+			switch(dlg.m_nAxis)
+			{
+			case 0 :
+				// Create matrix for Rot X
+				GzRotXMat(input->rotation[0], rotMat);
+				break;
+			case 1:
+				// Create matrix for Rot Y
+				GzRotYMat(input->rotation[1], rotMat);
+				break;
+			case 2:
+				// Create matrix for Rot Z
+				GzRotZMat(input->rotation[2], rotMat);
+				break;
+			}
 			GzPushMatrix(m_pApplication->m_pAARenders[aaPass], rotMat); 
 		}
 	}
@@ -245,14 +242,6 @@ void CCS580HWView::OnTranslate()
 	// TODO: Add your command handler code here
 	CTranslateDlg dlg;
 	GzInput* input;
-	GzMatrix	trxMat = 
-	{ 
-		1.0,	0.0,	0.0,	0.0, 
-		0.0,	1.0,	0.0,	0.0, 
-		0.0,	0.0,	1.0,	0.0, 
-		0.0,	0.0,	0.0,	1.0 
-	};
-
 
 	if(m_pApplication == NULL) return;
 
@@ -268,11 +257,16 @@ void CCS580HWView::OnTranslate()
 		// Update input translation value
 		input->translation[0] = dlg.m_fTx; input->translation[1] = dlg.m_fTy; input->translation[2] = dlg.m_fTz;
 
-		//  Create Translation Matrix
-		GzTrxMat(input->translation, trxMat);
-
 		// Accumulate matrix
 		for (int aaPass = 0; aaPass < AAKERNEL_SIZE; aaPass++) {
+			GzMatrix trxMat = 
+			{ 
+				1.0,	0.0,	0.0,	0.0, 
+				0.0,	1.0,	0.0,	0.0, 
+				0.0,	0.0,	1.0,	0.0, 
+				0.0,	0.0,	0.0,	1.0 
+			};
+			GzTrxMat(input->translation, trxMat);
 			GzPushMatrix(m_pApplication->m_pAARenders[aaPass], trxMat); 
 		}
 	}
@@ -284,14 +278,6 @@ void CCS580HWView::OnScale()
 	// TODO: Add your command handler code here
 	CScaleDlg dlg;
 	GzInput* input;
-	GzMatrix scaleMat = 
-	{ 
-		1.0,	0.0,	0.0,	0.0, 
-		0.0,	1.0,	0.0,	0.0, 
-		0.0,	0.0,	1.0,	0.0, 
-		0.0,	0.0,	0.0,	1.0 
-	};
-
 
 	if(m_pApplication == NULL) return;
 
@@ -307,11 +293,16 @@ void CCS580HWView::OnScale()
 		// Update input scale value
 		input->scale[0] = dlg.m_fSx; input->scale[1] = dlg.m_fSy; input->scale[2] = dlg.m_fSz;
 
-		//  Create Scaling Matrix
-		GzScaleMat(input->scale, scaleMat);
-
 		// Accumulate matrix
 		for (int aaPass = 0; aaPass < AAKERNEL_SIZE; aaPass++) {
+			GzMatrix scaleMat = 
+			{ 
+				1.0,	0.0,	0.0,	0.0, 
+				0.0,	1.0,	0.0,	0.0, 
+				0.0,	0.0,	1.0,	0.0, 
+				0.0,	0.0,	0.0,	1.0 
+			};
+			GzScaleMat(input->scale, scaleMat);
 			GzPushMatrix(m_pApplication->m_pAARenders[aaPass], scaleMat); 
 		}
 	}
