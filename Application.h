@@ -30,7 +30,7 @@ public:
 	int   m_nHeight;		// height of Frame Buffer
 
 	virtual int Render()=0; // Pass user input data and call renderer
-	virtual int SetReflective(bool);
+	virtual int SetReflective(bool)=0;
 };
 
 #endif // !defined(AFX_APPLICATION_H__3387B79A_B69F_491D_B782_81D9CAFAAB0F__INCLUDED_)
