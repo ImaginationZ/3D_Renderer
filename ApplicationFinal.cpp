@@ -32,6 +32,11 @@ bool IsModelReflective[MODEL_COUNT] = {
 	false,
 	false
 };
+bool IsModelRefractive[MODEL_COUNT] = { //NOTE in order to make a model transparant, both refractive and reflective 
+										//indices must be true for it. Therefore, if you set a material to be transparant, its reflective index, will be changed to true, automatically later.
+	true,
+	false
+};
 
 #define TEX_NONE 0
 #define TEX_FILE 1
@@ -94,8 +99,8 @@ int ApplicationFinal::Initialize()
 	/* 
 	* initialize the display and the renderer 
 	*/ 
-	m_nWidth = 256;		// frame buffer and display width
-	m_nHeight = 256;    // frame buffer and display height
+	m_nWidth = 512;		// frame buffer and display width
+	m_nHeight = 512;    // frame buffer and display height
 
 	status |= GzNewFrameBuffer(&m_pFrameBuffer, m_nWidth, m_nHeight);
 
@@ -263,6 +268,8 @@ int ApplicationFinal::Render()
 	status |= GzInitDisplay(emDisplay);
 
 	//TODO: dummy array will be replaced with real environment map
+
+#if 0
 	float dummyEmColors[6][7] = {
 		m_nWidth, m_nWidth * 2, 0, m_nWidth, 4000, 2000, 0,
 		0, m_nWidth, m_nWidth, m_nWidth * 2, 2000, 2000, 0,
@@ -289,7 +296,7 @@ int ApplicationFinal::Render()
 		return GZ_FAILURE;
 	}
 	GzFlushDisplay2File(em_outfile, emDisplay);
-
+#endif
 	/* 
 	* Tokens associated with triangle vertex values 
 	*/ 
@@ -307,28 +314,37 @@ int ApplicationFinal::Render()
 		}
 
 		//set texture per model
+		float refractionIndex = 1.2;
+
 		nameListShader[0]  = GZ_REFLECTIVE;
+		nameListShader[2]  = GZ_REFRACTION_INDEX;
+		valueListShader[2] = (GzPointer)&refractionIndex;
+		nameListShader[3]  = GZ_REFRACTIVE;
 
 		if (IsModelReflective[fileIndex]) {
 			valueListShader[0] = (GzPointer)true;
 			nameListShader[1]  = GZ_CUBE_MAP;
 			valueListShader[1] = (GzPointer)(cubetex_fun);
+			valueListShader[3] = (GzPointer)true;
 		} else if (ModelTextures[fileIndex] == TEX_FILE) {
 			valueListShader[0] = (GzPointer)false;
 			nameListShader[1]  = GZ_TEXTURE_MAP;
 			valueListShader[1] = (GzPointer)(tex_fun);
+			valueListShader[3] = (GzPointer)false;
 		} else if (ModelTextures[fileIndex] == TEX_PROC) {
 			valueListShader[0] = (GzPointer)false;
 			nameListShader[1]  = GZ_TEXTURE_MAP;
 			valueListShader[1] = (GzPointer)(ptex_fun);
+			valueListShader[3] = (GzPointer)false;
 		} else {
 			valueListShader[0] = (GzPointer)false;
 			nameListShader[1]  = GZ_TEXTURE_MAP;
 			valueListShader[1] = 0;
+			valueListShader[3] = (GzPointer)false;
 		}
 
 		for (int aaPass = 0; aaPass < AAKERNEL_SIZE; aaPass++) {
-			status |= GzPutAttribute(m_pAARenders[aaPass], 2, nameListShader, valueListShader);
+			status |= GzPutAttribute(m_pAARenders[aaPass], 4, nameListShader, valueListShader);
 		}
 
 		/* 

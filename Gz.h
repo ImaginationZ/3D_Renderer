@@ -21,6 +21,8 @@
 #define	GZ_AASHIFTY	45	/* antialiasing screen offset */
 
 #define	GZ_REFLECTIVE	200	/* is this model reflective? */
+#define	GZ_REFRACTIVE	201	/* is this model Trasparent? */
+#define	GZ_REFRACTION_INDEX			202	/* Refraction index or eta ratio. */
 
 /* renderer-state default pixel color */
 #define GZ_RGB_COLOR            99	

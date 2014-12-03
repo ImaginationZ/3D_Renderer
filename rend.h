@@ -34,6 +34,8 @@ typedef struct {			/* define a renderer */
   GzTexture		tex_fun;    /* tex_fun(float u, float v, GzColor color) */
   float			aaShiftX, aaShiftY;
   bool			isReflective;
+  bool			isRefractive;
+  float		    etaRatio;  //refraction index ratio
   GzCubeMap		cubetex_fun;
 }  GzRender;
 #endif

@@ -52,6 +52,7 @@ int PushWorldMatrix(GzRender *render, GzMatrix matrix);
 int GetNormalPlane(TriEdge* edges, int vectorComponent, Plane* plane);
 float GetPerspectiveFactor(float screenSpaceZ);
 int GetReflectionAcrossNormal(GzRender* render, GzCoord worldPos, GzCoord worldNorm, GzCoord* reflectionOutput);
+int GetRefractionAcrossNormal(GzRender* render, GzCoord worldPos, GzCoord worldNorm, GzCoord* reflectionOutput);
 int GetWorldPosPlane(TriEdge* edges, int vectorComponent, Plane* plane);
 int GetWorldNormalPlane(TriEdge* edges, int vectorComponent, Plane* plane);
 void getSortedEdges(GzRender* render, GzCoord* screenVerticies, GzCoord* modelVerticies, GzCoord* modelNormals, GzTextureIndex* uvList, TriEdge* edges);
@@ -685,6 +686,12 @@ int GzPutAttribute(GzRender	*render, int numAttributes, GzToken	*nameList,
 		case GZ_REFLECTIVE:
 			render->isReflective = valueList[i];
 			break;
+		case GZ_REFRACTIVE:
+			render->isRefractive = valueList[i];
+			break;
+		case GZ_REFRACTION_INDEX:
+			render->etaRatio = *((float*)valueList[i]);
+			break;
 		case GZ_CUBE_MAP:
 			render->cubetex_fun = static_cast<GzCubeMap>(valueList[i]);
 			break;
@@ -961,6 +968,35 @@ int GetReflectionAcrossNormal(GzRender* render, GzCoord worldPos, GzCoord worldN
 	return GZ_SUCCESS;
 }
 
+int GetRefractionAcrossNormal(GzRender* render, GzCoord worldPos, GzCoord worldNorm, GzCoord* reflectionOutput) {
+
+	float etaRatio = render->etaRatio;
+
+	VectorNormalize(worldNorm);
+
+	GzCoord incident;
+	VectorSubtract(worldPos, render->camera.position, incident);
+	VectorNormalize(incident);
+
+	float cosI = VectorDotProduct(worldNorm, incident);
+	cosI*=-1.0f; //to negate incident.
+	 
+	float cosT2 = 1.0f - etaRatio * etaRatio * (1.0f - cosI * cosI);
+	if(cosT2 > 0){
+		GzCoord T;
+		VectorScale(worldNorm, (etaRatio * cosI - sqrt(abs(cosT2))), T);
+		VectorScale(incident, -etaRatio, incident);
+		VectorSubtract(T, incident, T);
+		VectorNormalize(T);
+	
+		memcpy(reflectionOutput, T, sizeof(GzCoord));
+	} else {
+		GetReflectionAcrossNormal(render, worldPos, worldNorm, reflectionOutput);
+	}
+	
+	return GZ_SUCCESS;
+}
+
 int GetColorAtNormal(GzRender* render, GzCoord normal, GzColor textureColor, GzColor* normalColor) {
 	
 	GzColor color = {0, 0, 0};
@@ -1180,7 +1216,12 @@ int RenderTriangle(GzRender *render, GzCoord* modelSpaceVerticies, GzCoord* mode
 						if (render->isReflective) {
 							//compute reflection into environment map
 							GzCoord reflection;
-							GetReflectionAcrossNormal(render, interWorldPos, interWorldNorm, &reflection);
+							//GetReflectionAcrossNormal(render, interWorldPos, interWorldNorm, &reflection);
+							if(render->isRefractive){
+								GetRefractionAcrossNormal(render, interWorldPos, interWorldNorm, &reflection);
+							} else {
+								GetReflectionAcrossNormal(render, interWorldPos, interWorldNorm, &reflection);
+							}
 
 							render->cubetex_fun(reflection, textureColor);
 							GetColorAtNormal(render, interNormal, textureColor, &color);
