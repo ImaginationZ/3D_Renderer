@@ -27,6 +27,7 @@ public:
 	Application* m_pApplication;
 	void DrawFrameBuffer(CDC *pDC);
 	bool m_isReflective;
+	bool m_isRefractive;
 
 // Overrides
 	// ClassWizard generated virtual function overrides
@@ -59,6 +60,8 @@ protected:
 public:
 	afx_msg void OnMaterialReflective();
 	afx_msg void OnUpdateMaterialReflective(CCmdUI *pCmdUI);
+	afx_msg void OnMaterialGlass();
+	afx_msg void OnUpdateMaterialGlass(CCmdUI *pCmdUI);
 };
 
 #ifndef _DEBUG  // debug version in CS580HWView.cpp

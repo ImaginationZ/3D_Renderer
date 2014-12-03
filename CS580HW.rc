@@ -126,6 +126,7 @@ BEGIN
     POPUP "Material"
     BEGIN
         MENUITEM "Reflective",                  ID_MATERIAL_REFLECTIVE
+        MENUITEM "Glass",                       ID_MATERIAL_GLASS
     END
     POPUP "Render"
     BEGIN

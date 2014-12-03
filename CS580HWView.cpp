@@ -33,6 +33,8 @@ BEGIN_MESSAGE_MAP(CCS580HWView, CView)
 	ON_COMMAND(ID_MATERIAL_REFLECTIVE, OnMaterialReflective)
 	//}}AFX_MSG_MAP
 	ON_UPDATE_COMMAND_UI(ID_MATERIAL_REFLECTIVE, &CCS580HWView::OnUpdateMaterialReflective)
+	ON_COMMAND(ID_MATERIAL_GLASS, &CCS580HWView::OnMaterialGlass)
+	ON_UPDATE_COMMAND_UI(ID_MATERIAL_GLASS, &CCS580HWView::OnUpdateMaterialGlass)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -43,6 +45,7 @@ CCS580HWView::CCS580HWView()
 	// TODO: add construction code here
 	m_pApplication = NULL;
 	m_isReflective = false;
+	m_isRefractive = false;
 }
 
 CCS580HWView::~CCS580HWView()
@@ -319,4 +322,17 @@ void CCS580HWView::OnMaterialReflective()
 void CCS580HWView::OnUpdateMaterialReflective(CCmdUI *pCmdUI)
 {
 	pCmdUI->SetCheck(m_isReflective);
+}
+
+
+void CCS580HWView::OnMaterialGlass()
+{
+	m_isRefractive = !m_isRefractive;
+	m_pApplication->SetRefractive(m_isRefractive);
+}
+
+
+void CCS580HWView::OnUpdateMaterialGlass(CCmdUI *pCmdUI)
+{
+	pCmdUI->SetCheck(m_isRefractive);
 }

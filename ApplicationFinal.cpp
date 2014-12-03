@@ -34,7 +34,7 @@ bool IsModelReflective[MODEL_COUNT] = {
 };
 bool IsModelRefractive[MODEL_COUNT] = { //NOTE in order to make a model transparant, both refractive and reflective 
 										//indices must be true for it. Therefore, if you set a material to be transparant, its reflective index, will be changed to true, automatically later.
-	true,
+	false,
 	false
 };
 
@@ -99,8 +99,8 @@ int ApplicationFinal::Initialize()
 	/* 
 	* initialize the display and the renderer 
 	*/ 
-	m_nWidth = 512;		// frame buffer and display width
-	m_nHeight = 512;    // frame buffer and display height
+	m_nWidth = 256;		// frame buffer and display width
+	m_nHeight = 256;    // frame buffer and display height
 
 	status |= GzNewFrameBuffer(&m_pFrameBuffer, m_nWidth, m_nHeight);
 
@@ -149,7 +149,7 @@ int ApplicationFinal::Initialize()
 		camera.worldup[Y] = 1.0;
 		camera.worldup[Z] = 0.0;
 
-		camera.FOV = 63.7;              /* degrees */
+		camera.FOV = 50.0;              /* degrees */
 
 		status |= GzPutCamera(m_pAARenders[aaPass], &camera); 
 
@@ -314,7 +314,7 @@ int ApplicationFinal::Render()
 		}
 
 		//set texture per model
-		float refractionIndex = 1.2;
+		float refractionIndex = 1.5;
 
 		nameListShader[0]  = GZ_REFLECTIVE;
 		nameListShader[2]  = GZ_REFRACTION_INDEX;
@@ -322,6 +322,11 @@ int ApplicationFinal::Render()
 		nameListShader[3]  = GZ_REFRACTIVE;
 
 		if (IsModelReflective[fileIndex]) {
+			valueListShader[0] = (GzPointer)true;
+			nameListShader[1]  = GZ_CUBE_MAP;
+			valueListShader[1] = (GzPointer)(cubetex_fun);
+			valueListShader[3] = (GzPointer)false;
+		} else if (IsModelRefractive[fileIndex]) {
 			valueListShader[0] = (GzPointer)true;
 			nameListShader[1]  = GZ_CUBE_MAP;
 			valueListShader[1] = (GzPointer)(cubetex_fun);
@@ -436,6 +441,12 @@ void FinishAA(GzDisplay** aaDisplays, GzDisplay* outputDisplay)
 int ApplicationFinal::SetReflective(bool isReflective) 
 {
 	IsModelReflective[0] = isReflective;
+	return GZ_SUCCESS;
+}
+
+int ApplicationFinal::SetRefractive(bool isRefractive) 
+{
+	IsModelRefractive[0] = isRefractive;
 	return GZ_SUCCESS;
 }
 
