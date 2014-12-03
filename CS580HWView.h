@@ -31,6 +31,7 @@ public:
 	bool m_isGlass;
 	bool m_isDiamond;
 	bool m_isAir;
+	bool m_loadSkybox;
 
 // Overrides
 	// ClassWizard generated virtual function overrides
@@ -72,6 +73,8 @@ public:
 	afx_msg void OnUpdateMaterialDiamond(CCmdUI *pCmdUI);
 	afx_msg void OnMaterialAir();
 	afx_msg void OnUpdateMaterialAir(CCmdUI *pCmdUI);
+	afx_msg void OnShowskybox();
+	afx_msg void OnUpdateShowskybox(CCmdUI *pCmdUI);
 };
 
 #ifndef _DEBUG  // debug version in CS580HWView.cpp

@@ -24,6 +24,7 @@ static char THIS_FILE[]=__FILE__;
 #define EM_OUTFILE	"em_output.ppm"
 
 #define MODEL_COUNT	7
+bool shouldLoadSkybox = false;
 const char* ModelFiles[MODEL_COUNT] = {
 	"ppot.asc",
 	"skybox/negY.asc",
@@ -180,7 +181,7 @@ int ApplicationFinal::Initialize()
 		//bad 8, 2, 8
 		camera.position[X] = 0;
 		camera.position[Y] = 4;
-		camera.position[Z] = 8;
+		camera.position[Z] = 9;
 
 		camera.lookat[X] = 0;
 		camera.lookat[Y] = 0;
@@ -346,7 +347,13 @@ int ApplicationFinal::Render()
 	nameListTriangle[1] = GZ_NORMAL; 
 	nameListTriangle[2] = GZ_TEXTURE_INDEX;  
 
-	for (int fileIndex = 0; fileIndex < MODEL_COUNT; fileIndex++) {
+	//choose whether to load skybox
+	int modelCount = 1;
+	if (shouldLoadSkybox) {
+		modelCount = MODEL_COUNT;
+	}
+
+	for (int fileIndex = 0; fileIndex < modelCount; fileIndex++) {
 
 		ResetTexture();
 
@@ -498,6 +505,12 @@ int ApplicationFinal::SetRefractive(bool isRefractive)
 int ApplicationFinal::SetRefractiveIndex(float index) 
 {
 	ModelRefractionIndex[0] = index;
+	return GZ_SUCCESS;
+}
+
+int ApplicationFinal::SetLoadSkybox(bool shouldLoad) 
+{
+	shouldLoadSkybox = shouldLoad;
 	return GZ_SUCCESS;
 }
 

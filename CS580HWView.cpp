@@ -41,6 +41,8 @@ BEGIN_MESSAGE_MAP(CCS580HWView, CView)
 	ON_UPDATE_COMMAND_UI(ID_MATERIAL_DIAMOND, &CCS580HWView::OnUpdateMaterialDiamond)
 	ON_COMMAND(ID_MATERIAL_AIR, &CCS580HWView::OnMaterialAir)
 	ON_UPDATE_COMMAND_UI(ID_MATERIAL_AIR, &CCS580HWView::OnUpdateMaterialAir)
+	ON_COMMAND(ID_EDIT_SHOWSKYBOX32782, &CCS580HWView::OnShowskybox)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_SHOWSKYBOX32782, &CCS580HWView::OnUpdateShowskybox)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -55,6 +57,7 @@ CCS580HWView::CCS580HWView()
 	m_isGlass = false;
 	m_isDiamond = false;
 	m_isAir = false;
+	m_loadSkybox = false;
 }
 
 CCS580HWView::~CCS580HWView()
@@ -415,4 +418,17 @@ void CCS580HWView::ResetCheckboxes()
 	m_pApplication->SetReflective(false);
 	m_pApplication->SetRefractive(false);
 	m_pApplication->SetRefractiveIndex(0);
+}
+
+
+void CCS580HWView::OnShowskybox()
+{
+	m_loadSkybox = !m_loadSkybox;
+	m_pApplication->SetLoadSkybox(m_loadSkybox);
+}
+
+
+void CCS580HWView::OnUpdateShowskybox(CCmdUI *pCmdUI)
+{
+	pCmdUI->SetCheck(m_loadSkybox);
 }

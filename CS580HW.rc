@@ -113,6 +113,7 @@ BEGIN
         MENUITEM "&Rotate Object",              IDM_ROTATE
         MENUITEM "&Translate Object",           IDM_TRANSLATE
         MENUITEM "&Scale Object",               IDM_SCALE
+        MENUITEM "Show Skybox",                 ID_EDIT_SHOWSKYBOX32782
     END
     POPUP "&View"
     BEGIN
