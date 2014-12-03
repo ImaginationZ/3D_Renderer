@@ -43,6 +43,8 @@ BEGIN_MESSAGE_MAP(CCS580HWView, CView)
 	ON_UPDATE_COMMAND_UI(ID_MATERIAL_AIR, &CCS580HWView::OnUpdateMaterialAir)
 	ON_COMMAND(ID_EDIT_SHOWSKYBOX32782, &CCS580HWView::OnShowskybox)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_SHOWSKYBOX32782, &CCS580HWView::OnUpdateShowskybox)
+	ON_COMMAND(ID_EDIT_USEAA, &CCS580HWView::OnEditUseaa)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_USEAA, &CCS580HWView::OnUpdateEditUseaa)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -58,6 +60,7 @@ CCS580HWView::CCS580HWView()
 	m_isDiamond = false;
 	m_isAir = false;
 	m_loadSkybox = false;
+	m_useAA = false;
 }
 
 CCS580HWView::~CCS580HWView()
@@ -431,4 +434,17 @@ void CCS580HWView::OnShowskybox()
 void CCS580HWView::OnUpdateShowskybox(CCmdUI *pCmdUI)
 {
 	pCmdUI->SetCheck(m_loadSkybox);
+}
+
+
+void CCS580HWView::OnEditUseaa()
+{
+	m_useAA = !m_useAA;
+	m_pApplication->SetAA(m_useAA);
+}
+
+
+void CCS580HWView::OnUpdateEditUseaa(CCmdUI *pCmdUI)
+{
+	pCmdUI->SetCheck(m_useAA);
 }

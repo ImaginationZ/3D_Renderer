@@ -113,7 +113,9 @@ BEGIN
         MENUITEM "&Rotate Object",              IDM_ROTATE
         MENUITEM "&Translate Object",           IDM_TRANSLATE
         MENUITEM "&Scale Object",               IDM_SCALE
+        MENUITEM SEPARATOR
         MENUITEM "Show Skybox",                 ID_EDIT_SHOWSKYBOX32782
+        MENUITEM "Use AA",                      ID_EDIT_USEAA
     END
     POPUP "&View"
     BEGIN

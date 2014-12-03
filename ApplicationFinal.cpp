@@ -86,6 +86,7 @@ const char* ModelTexFiles[MODEL_COUNT] = {
 	"skybox/posY.ppm"
 };
 
+bool shouldUseAA = false;
 const float AAFilter[AAKERNEL_SIZE][3] = // X-shift, Y-shift, weight
 {
 	-0.52, 0.38, 0.128, 		0.41, 0.56, 0.119,		0.27, 0.08, 0.294,
@@ -140,8 +141,8 @@ int ApplicationFinal::Initialize()
 	/* 
 	* initialize the display and the renderer 
 	*/ 
-	m_nWidth = 256;		// frame buffer and display width
-	m_nHeight = 256;    // frame buffer and display height
+	m_nWidth = 512;		// frame buffer and display width
+	m_nHeight = 512;    // frame buffer and display height
 
 	status |= GzNewFrameBuffer(&m_pFrameBuffer, m_nWidth, m_nHeight);
 
@@ -296,8 +297,10 @@ int ApplicationFinal::Render()
 	char		dummy[256]; 
 	int			status; 
 
+	int renderCount = shouldUseAA ? AAKERNEL_SIZE : 1;
+
 	//clean before re-rendering
-	for (int aaPass = 0; aaPass < AAKERNEL_SIZE; aaPass++) {
+	for (int aaPass = 0; aaPass < renderCount; aaPass++) {
 		GzInitDisplay(m_pAADisplays[aaPass]);
 	}
 	GzInitDisplay(m_pDisplay);
@@ -400,7 +403,7 @@ int ApplicationFinal::Render()
 			valueListShader[3] = (GzPointer)false;
 		}
 
-		for (int aaPass = 0; aaPass < AAKERNEL_SIZE; aaPass++) {
+		for (int aaPass = 0; aaPass < renderCount; aaPass++) {
 			status |= GzPutAttribute(m_pAARenders[aaPass], 5, nameListShader, valueListShader);
 		}
 
@@ -437,7 +440,7 @@ int ApplicationFinal::Render()
 			valueListTriangle[1] = (GzPointer)normalList; 
 			valueListTriangle[2] = (GzPointer)uvList;
 
-			for (int aaPass = 0; aaPass < AAKERNEL_SIZE; aaPass++) {
+			for (int aaPass = 0; aaPass < renderCount; aaPass++) {
 				GzPutTriangle(m_pAARenders[aaPass], 3, nameListTriangle, valueListTriangle); 
 			}
 		}
@@ -446,7 +449,11 @@ int ApplicationFinal::Render()
 			AfxMessageBox( "The input file was not closed\n" );
 	}
 
-	FinishAA(m_pAADisplays, m_pDisplay);
+	if (shouldUseAA) {
+		FinishAA(m_pAADisplays, m_pDisplay);
+	} else {
+		memcpy(m_pDisplay, m_pAADisplays[0], sizeof(GzDisplay));
+	}
 
 	FILE *outfile;
 	if( (outfile  = fopen( OUTFILE , "wb" )) == NULL )
@@ -511,6 +518,12 @@ int ApplicationFinal::SetRefractiveIndex(float index)
 int ApplicationFinal::SetLoadSkybox(bool shouldLoad) 
 {
 	shouldLoadSkybox = shouldLoad;
+	return GZ_SUCCESS;
+}
+
+int ApplicationFinal::SetAA(bool shouldAA) 
+{
+	shouldUseAA = shouldAA;
 	return GZ_SUCCESS;
 }
 

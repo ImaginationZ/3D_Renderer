@@ -24,6 +24,7 @@ public:
 	int SetRefractive(bool);
 	int SetRefractiveIndex(float);
 	int SetLoadSkybox(bool);
+	int SetAA(bool);
 };
 
 #endif // !defined(AFX_APPLICATION5_H__43A7FA9C_6CD6_4A79_9567_2354BFEFAFFB__INCLUDED_)
