@@ -323,7 +323,10 @@ void CCS580HWView::OnScale()
 
 void CCS580HWView::OnMaterialReflective()
 {
-	m_isReflective = !m_isReflective;
+	bool temp = m_isReflective;
+	ResetCheckboxes();
+
+	m_isReflective = !temp;
 	m_pApplication->SetReflective(m_isReflective);
 }
 
@@ -336,7 +339,10 @@ void CCS580HWView::OnUpdateMaterialReflective(CCmdUI *pCmdUI)
 
 void CCS580HWView::OnMaterialGlass()
 {
-	m_isGlass = !m_isGlass;
+	bool temp = m_isGlass;
+	ResetCheckboxes();
+
+	m_isGlass = !temp;
 	m_pApplication->SetRefractive(m_isGlass);
 	m_pApplication->SetRefractiveIndex(1.5);
 }
@@ -350,7 +356,10 @@ void CCS580HWView::OnUpdateMaterialGlass(CCmdUI *pCmdUI)
 
 void CCS580HWView::OnMaterialWater()
 {
-	m_isWater = !m_isWater;
+	bool temp = m_isWater;
+	ResetCheckboxes();
+
+	m_isWater = !temp;
 	m_pApplication->SetRefractive(m_isWater);
 	m_pApplication->SetRefractiveIndex(1.325);
 }
@@ -364,7 +373,10 @@ void CCS580HWView::OnUpdateMaterialWater(CCmdUI *pCmdUI)
 
 void CCS580HWView::OnMaterialDiamond()
 {
-	m_isDiamond = !m_isDiamond;
+	bool temp = m_isDiamond;
+	ResetCheckboxes();
+
+	m_isDiamond = !temp;
 	m_pApplication->SetRefractive(m_isDiamond);
 	m_pApplication->SetRefractiveIndex(2.418);
 }
@@ -378,7 +390,10 @@ void CCS580HWView::OnUpdateMaterialDiamond(CCmdUI *pCmdUI)
 
 void CCS580HWView::OnMaterialAir()
 {
-	m_isAir = !m_isAir;
+	bool temp = m_isAir;
+	ResetCheckboxes();
+
+	m_isAir = !temp;
 	m_pApplication->SetRefractive(m_isAir);
 	m_pApplication->SetRefractiveIndex(1.0);
 }
@@ -387,4 +402,17 @@ void CCS580HWView::OnMaterialAir()
 void CCS580HWView::OnUpdateMaterialAir(CCmdUI *pCmdUI)
 {
 	pCmdUI->SetCheck(m_isAir);
+}
+
+void CCS580HWView::ResetCheckboxes() 
+{
+	m_isReflective = false;
+	m_isWater = false;
+	m_isGlass = false;
+	m_isDiamond = false;
+	m_isAir = false;
+
+	m_pApplication->SetReflective(false);
+	m_pApplication->SetRefractive(false);
+	m_pApplication->SetRefractiveIndex(0);
 }

@@ -58,6 +58,7 @@ protected:
 	afx_msg void OnRotate();
 	afx_msg void OnTranslate();
 	afx_msg void OnScale();
+	afx_msg void ResetCheckboxes();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 public:
@@ -70,6 +71,7 @@ public:
 	afx_msg void OnMaterialDiamond();
 	afx_msg void OnUpdateMaterialDiamond(CCmdUI *pCmdUI);
 	afx_msg void OnMaterialAir();
+	afx_msg void OnUpdateMaterialAir(CCmdUI *pCmdUI);
 };
 
 #ifndef _DEBUG  // debug version in CS580HWView.cpp
