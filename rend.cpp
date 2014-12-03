@@ -986,35 +986,6 @@ int GetReflectionAcrossNormal(GzRender* render, GzCoord worldPos, GzCoord worldN
 
 int GetRefractionAcrossNormal(GzRender* render, GzCoord worldPos, GzCoord worldNorm, GzCoord* reflectionOutput) {
 
-	/*
-	float etaRatio = render->etaRatio;
-
-	VectorNormalize(worldNorm);
-
-	GzCoord incident;
-	VectorSubtract(worldPos, render->camera.position, incident);
-	VectorNormalize(incident);
-
-	float cosI = VectorDotProduct(worldNorm, incident);
-	cosI *= -1.0f; //to negate incident.
-	 
-	float cosT2 = 1.0f - etaRatio * etaRatio * (1.0f - cosI * cosI);
-
-	if(cosT2 > 0){
-		GzCoord T;
-		VectorScale(worldNorm, (etaRatio * cosI - sqrt(abs(cosT2))), T);
-		VectorScale(incident, -etaRatio, incident);
-		VectorSubtract(T, incident, T);
-		VectorNormalize(T);
-
-		memcpy(reflectionOutput, T, sizeof(GzCoord));
-	} else {
-		GetReflectionAcrossNormal(render, worldPos, worldNorm, reflectionOutput);
-	}
-	
-	return GZ_SUCCESS;
-	*/
-
 	float etaRatio=render->etaRatio	;
 
 	VectorNormalize(worldNorm);
