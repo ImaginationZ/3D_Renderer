@@ -23,19 +23,22 @@ static char THIS_FILE[]=__FILE__;
 #define OUTFILE "output.ppm"
 #define EM_OUTFILE	"em_output.ppm"
 
-#define MODEL_COUNT	3
+#define MODEL_COUNT	4
 const char* ModelFiles[MODEL_COUNT] = {
 	"ppot.asc",
 	"skybox/negY.asc",
-	"skybox/posZ.asc"
+	"skybox/posZ.asc",
+	"skybox/posX.asc"
 };
 bool IsModelReflective[MODEL_COUNT] = {
+	false,
 	false,
 	false,
 	false
 };
 bool IsModelRefractive[MODEL_COUNT] = { //NOTE in order to make a model transparant, both refractive and reflective 
 										//indices must be true for it. Therefore, if you set a material to be transparant, its reflective index, will be changed to true, automatically later.
+	false,
 	false,
 	false,
 	false
@@ -47,13 +50,15 @@ bool IsModelRefractive[MODEL_COUNT] = { //NOTE in order to make a model transpar
 const int ModelTextures[MODEL_COUNT] = {
 	TEX_NONE,
 	TEX_FILE,
+	TEX_FILE,
 	TEX_FILE
 };
 
 const char* ModelTexFiles[MODEL_COUNT] = {
 	0,
 	"skybox/negY.ppm",
-	"skybox/posZ.ppm"
+	"skybox/posZ.ppm",
+	"skybox/posX.ppm"
 };
 
 const float AAFilter[AAKERNEL_SIZE][3] = // X-shift, Y-shift, weight
@@ -148,9 +153,9 @@ int ApplicationFinal::Initialize()
 
 		status |= GzPutCamera(m_pAARenders[aaPass], &camera);
 #endif 
-		camera.position[X] = 0.001;
-		camera.position[Y] = 4;
-		camera.position[Z] = -7; //setting to 0 causes blank screen
+		camera.position[X] = -10;
+		camera.position[Y] = 2;
+		camera.position[Z] = -10;
 
 		camera.lookat[X] = 0;
 		camera.lookat[Y] = 0;
@@ -160,7 +165,8 @@ int ApplicationFinal::Initialize()
 		camera.worldup[Y] = 1.0;
 		camera.worldup[Z] = 0.0;
 
-		camera.FOV = 60.0;              /* degrees */
+		//FOV in degrees
+		camera.FOV = 35; /* TODO: running into clipping issues on higher FOV */
 
 		status |= GzPutCamera(m_pAARenders[aaPass], &camera); 
 
@@ -175,8 +181,8 @@ int ApplicationFinal::Initialize()
 
 		/* Material property */
 		GzColor specularCoefficient = { 0.3, 0.3, 0.3 };
-		GzColor ambientCoefficient = { 2.0, 2.0, 2.0 };
-		GzColor diffuseCoefficient = {0.2, 0.2, 0.2};
+		GzColor ambientCoefficient = { 0.3, 0.3, 0.3 };
+		GzColor diffuseCoefficient = {0.1, 0.1, 0.1};
 
 		/* 
 		renderer is ready for frame --- define lights and shader at start of frame 

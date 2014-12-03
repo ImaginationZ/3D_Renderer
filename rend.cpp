@@ -347,7 +347,7 @@ int CalculateXsp(GzRender *render, GzDisplay *display) {
 
 int CalculateXpi(GzRender *render) {
 	float fovInRadians = DegreesToRadians(render->camera.FOV);
-	float projectionTerm = tan(fovInRadians / 2);
+	float projectionTerm = 1 / tan(fovInRadians / 2);
 	
 	render->camera.Xpi[0][0] = 1;
 	render->camera.Xpi[0][1] = 0;
@@ -361,12 +361,12 @@ int CalculateXpi(GzRender *render) {
 
 	render->camera.Xpi[2][0] = 0;
 	render->camera.Xpi[2][1] = 0;
-	render->camera.Xpi[2][2] = projectionTerm;
+	render->camera.Xpi[2][2] = 1 / projectionTerm;
 	render->camera.Xpi[2][3] = 0;
 
 	render->camera.Xpi[3][0] = 0;
 	render->camera.Xpi[3][1] = 0;
-	render->camera.Xpi[3][2] = projectionTerm;
+	render->camera.Xpi[3][2] = 1 / projectionTerm;
 	render->camera.Xpi[3][3] = 1;
 
 	return GZ_SUCCESS;
@@ -787,7 +787,7 @@ void getSortedEdges(GzRender* render, GzCoord* screenVerticies, GzCoord* modelVe
 	}
 }
 
-BoundingBox* getBoundingBox(GzCoord* verticies) {
+BoundingBox* getBoundingBox(GzRender* render, GzCoord* verticies) {
 	BoundingBox* bb = new BoundingBox();
 	
 	GzCoord verticiesCopy[3];
@@ -802,6 +802,19 @@ BoundingBox* getBoundingBox(GzCoord* verticies) {
 	qsort(verticiesCopy, 3, sizeof(GzCoord), sortVerticiesByX);
 	bb->startX = floor(verticiesCopy[0][X]);
 	bb->endX = ceil(verticiesCopy[2][X]);
+
+	if (bb->startX < 0) {
+		bb->startX = 0;
+	}
+	if (bb->startY < 0) {
+		bb->startY = 0;
+	}
+	if (bb->endX >= render->display->xres) {
+		bb->endX = render->display->xres - 1;
+	}
+	if (bb->endY >= render->display->yres) {
+		bb->endY = render->display->yres - 1;
+	}
 
 	return bb;
 }
@@ -1058,7 +1071,9 @@ int GetColorAtNormal(GzRender* render, GzCoord normal, GzColor textureColor, GzC
 
 		//textured Phong
 		MultiplyVectorByCoefficient(render->ambientlight.color, textureColor, ambient);
-		MultiplyVectorByCoefficient(ambient, render->Ka, ambient);
+
+		GzColor reflectionCoefficient = { 2.0, 2.0, 2.0 };
+		MultiplyVectorByCoefficient(ambient, reflectionCoefficient, ambient);
 
 		MultiplyVectorByCoefficient(diffuseSum, textureColor, diffuse);
 		MultiplyVectorByCoefficient(diffuse, render->Kd, diffuse);
@@ -1117,8 +1132,8 @@ int RenderTriangle(GzRender *render, GzCoord* modelSpaceVerticies, GzCoord* mode
 		
 	TriEdge edges[3];
 	getSortedEdges(render, screenSpaceVerticies, modelSpaceVerticies, modelSpaceNormals, uvList, edges);
-	BoundingBox* box = getBoundingBox(screenSpaceVerticies);
-
+	BoundingBox* box = getBoundingBox(render, screenSpaceVerticies);
+	
 	Plane colorPlanes[3];
 	Plane normalPlanes[3];
 	Plane uvPlanes[2];
