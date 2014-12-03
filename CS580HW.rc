@@ -125,8 +125,11 @@ BEGIN
     END
     POPUP "Material"
     BEGIN
-        MENUITEM "Reflective",                  ID_MATERIAL_REFLECTIVE
+        MENUITEM "Chrome",                      ID_MATERIAL_REFLECTIVE
+        MENUITEM "Water",                       ID_MATERIAL_WATER
         MENUITEM "Glass",                       ID_MATERIAL_GLASS
+        MENUITEM "Diamond",                     ID_MATERIAL_DIAMOND
+        MENUITEM "Air",                         ID_MATERIAL_AIR
     END
     POPUP "Render"
     BEGIN

@@ -52,6 +52,15 @@ bool IsModelRefractive[MODEL_COUNT] = { //NOTE in order to make a model transpar
 	false,
 	false
 };
+float ModelRefractionIndex[MODEL_COUNT] = {
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0
+};
 
 #define TEX_NONE 0
 #define TEX_FILE 1
@@ -170,8 +179,8 @@ int ApplicationFinal::Initialize()
 #endif 
 		//bad 8, 2, 8
 		camera.position[X] = 0;
-		camera.position[Y] = 9;
-		camera.position[Z] = -9;
+		camera.position[Y] = 4;
+		camera.position[Z] = 8;
 
 		camera.lookat[X] = 0;
 		camera.lookat[Y] = 0;
@@ -349,12 +358,9 @@ int ApplicationFinal::Render()
 			return GZ_FAILURE;
 		}
 
-		//set texture per model
-		float refractionIndex = 1.5;
-
 		nameListShader[0]  = GZ_REFLECTIVE;
 		nameListShader[2]  = GZ_REFRACTION_INDEX;
-		valueListShader[2] = (GzPointer)&refractionIndex;
+		valueListShader[2] = (GzPointer)&ModelRefractionIndex[fileIndex];
 		nameListShader[3]  = GZ_REFRACTIVE;
 
 		nameListShader[4]  = GZ_TEXTURE_FILENAME;
@@ -486,6 +492,12 @@ int ApplicationFinal::SetReflective(bool isReflective)
 int ApplicationFinal::SetRefractive(bool isRefractive) 
 {
 	IsModelRefractive[0] = isRefractive;
+	return GZ_SUCCESS;
+}
+
+int ApplicationFinal::SetRefractiveIndex(float index) 
+{
+	ModelRefractionIndex[0] = index;
 	return GZ_SUCCESS;
 }
 

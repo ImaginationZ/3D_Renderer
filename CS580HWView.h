@@ -27,7 +27,10 @@ public:
 	Application* m_pApplication;
 	void DrawFrameBuffer(CDC *pDC);
 	bool m_isReflective;
-	bool m_isRefractive;
+	bool m_isWater;
+	bool m_isGlass;
+	bool m_isDiamond;
+	bool m_isAir;
 
 // Overrides
 	// ClassWizard generated virtual function overrides
@@ -62,6 +65,11 @@ public:
 	afx_msg void OnUpdateMaterialReflective(CCmdUI *pCmdUI);
 	afx_msg void OnMaterialGlass();
 	afx_msg void OnUpdateMaterialGlass(CCmdUI *pCmdUI);
+	afx_msg void OnMaterialWater();
+	afx_msg void OnUpdateMaterialWater(CCmdUI *pCmdUI);
+	afx_msg void OnMaterialDiamond();
+	afx_msg void OnUpdateMaterialDiamond(CCmdUI *pCmdUI);
+	afx_msg void OnMaterialAir();
 };
 
 #ifndef _DEBUG  // debug version in CS580HWView.cpp
