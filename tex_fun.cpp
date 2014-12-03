@@ -155,7 +155,7 @@ int cubetex_fun(GzCoord reflection, GzColor color) {
 
 	/* open and load environment map file */
 	if (environmentReset) {
-		fd = fopen ("em_output.ppm", "rb");
+		fd = fopen ("em_skybox.ppm", "rb");
 		if (fd == NULL) {
 			fprintf (stderr, "environment map texture file (em_output.ppm) not found\n");
 			exit(-1);
