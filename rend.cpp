@@ -1075,11 +1075,13 @@ int GetColorAtNormal(GzRender* render, GzCoord normal, GzColor textureColor, GzC
 		//textured Phong
 		MultiplyVectorByCoefficient(render->ambientlight.color, textureColor, ambient);
 
-		GzColor reflectionCoefficient = { 2.0, 2.0, 2.0 };
-		MultiplyVectorByCoefficient(ambient, reflectionCoefficient, ambient);
+		GzColor reflectionCoefficientA = { 1.3, 1.3, 1.3 };
+		MultiplyVectorByCoefficient(ambient, reflectionCoefficientA, ambient);
 
 		MultiplyVectorByCoefficient(diffuseSum, textureColor, diffuse);
-		MultiplyVectorByCoefficient(diffuse, render->Kd, diffuse);
+
+		GzColor reflectionCoefficientD = { 0.1, 0.1, 0.1 };
+		MultiplyVectorByCoefficient(diffuse, reflectionCoefficientD, diffuse);
 
 		MultiplyVectorByCoefficient(specularSum, render->Ks, specular);
 	} else if (render->tex_fun == 0) {
