@@ -23,14 +23,18 @@ static char THIS_FILE[]=__FILE__;
 #define OUTFILE "output.ppm"
 #define EM_OUTFILE	"em_output.ppm"
 
-#define MODEL_COUNT	4
+#define MODEL_COUNT	6
 const char* ModelFiles[MODEL_COUNT] = {
 	"ppot.asc",
 	"skybox/negY.asc",
 	"skybox/posZ.asc",
-	"skybox/posX.asc"
+	"skybox/posX.asc",
+	"skybox/negX.asc",
+	"skybox/negZ.asc"
 };
 bool IsModelReflective[MODEL_COUNT] = {
+	false,
+	false,
 	false,
 	false,
 	false,
@@ -38,6 +42,8 @@ bool IsModelReflective[MODEL_COUNT] = {
 };
 bool IsModelRefractive[MODEL_COUNT] = { //NOTE in order to make a model transparant, both refractive and reflective 
 										//indices must be true for it. Therefore, if you set a material to be transparant, its reflective index, will be changed to true, automatically later.
+	false,
+	false,
 	false,
 	false,
 	false,
@@ -51,6 +57,8 @@ const int ModelTextures[MODEL_COUNT] = {
 	TEX_NONE,
 	TEX_FILE,
 	TEX_FILE,
+	TEX_FILE,
+	TEX_FILE,
 	TEX_FILE
 };
 
@@ -58,7 +66,9 @@ const char* ModelTexFiles[MODEL_COUNT] = {
 	0,
 	"skybox/negY.ppm",
 	"skybox/posZ.ppm",
-	"skybox/posX.ppm"
+	"skybox/posX.ppm",
+	"skybox/negX.ppm",
+	"skybox/negZ.ppm"
 };
 
 const float AAFilter[AAKERNEL_SIZE][3] = // X-shift, Y-shift, weight
@@ -153,9 +163,10 @@ int ApplicationFinal::Initialize()
 
 		status |= GzPutCamera(m_pAARenders[aaPass], &camera);
 #endif 
-		camera.position[X] = -10;
-		camera.position[Y] = 2;
-		camera.position[Z] = -10;
+		//bad 8, 2, 8
+		camera.position[X] = 0;
+		camera.position[Y] = 4;
+		camera.position[Z] = 8;
 
 		camera.lookat[X] = 0;
 		camera.lookat[Y] = 0;
