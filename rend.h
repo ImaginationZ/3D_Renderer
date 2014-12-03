@@ -37,6 +37,7 @@ typedef struct {			/* define a renderer */
   bool			isRefractive;
   float		    etaRatio;  //refraction index ratio
   GzCubeMap		cubetex_fun;
+  char*			texture_filename;
 }  GzRender;
 #endif
 

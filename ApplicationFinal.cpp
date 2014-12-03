@@ -23,17 +23,20 @@ static char THIS_FILE[]=__FILE__;
 #define OUTFILE "output.ppm"
 #define EM_OUTFILE	"em_output.ppm"
 
-#define MODEL_COUNT	2
+#define MODEL_COUNT	3
 const char* ModelFiles[MODEL_COUNT] = {
 	"ppot.asc",
-	"plane.asc"
+	"skybox/negY.asc",
+	"skybox/posZ.asc"
 };
 bool IsModelReflective[MODEL_COUNT] = {
+	false,
 	false,
 	false
 };
 bool IsModelRefractive[MODEL_COUNT] = { //NOTE in order to make a model transparant, both refractive and reflective 
 										//indices must be true for it. Therefore, if you set a material to be transparant, its reflective index, will be changed to true, automatically later.
+	false,
 	false,
 	false
 };
@@ -43,7 +46,14 @@ bool IsModelRefractive[MODEL_COUNT] = { //NOTE in order to make a model transpar
 #define TEX_PROC 2
 const int ModelTextures[MODEL_COUNT] = {
 	TEX_NONE,
-	TEX_PROC
+	TEX_FILE,
+	TEX_FILE
+};
+
+const char* ModelTexFiles[MODEL_COUNT] = {
+	0,
+	"skybox/negY.ppm",
+	"skybox/posZ.ppm"
 };
 
 const float AAFilter[AAKERNEL_SIZE][3] = // X-shift, Y-shift, weight
@@ -52,9 +62,10 @@ const float AAFilter[AAKERNEL_SIZE][3] = // X-shift, Y-shift, weight
 	-0.17, -0.29, 0.249,		0.58, -0.55, 0.104,		-0.31, -0.71, 0.106
 };
 
-extern int tex_fun(float u, float v, GzColor color); /* image texture function */
+extern int tex_fun(float u, float v, char* filename, GzColor color); /* image texture function */
 extern int ptex_fun(float u, float v, GzColor color); /* procedural texture function */
 extern int cubetex_fun(GzCoord reflection, GzColor color); /* environment map texture function */
+extern int ResetTexture(); /*load new texture*/
 
 void shade(GzCoord norm, GzCoord color);
 
@@ -137,9 +148,9 @@ int ApplicationFinal::Initialize()
 
 		status |= GzPutCamera(m_pAARenders[aaPass], &camera);
 #endif 
-		camera.position[X] = 0;
-		camera.position[Y] = 5;
-		camera.position[Z] = -7;
+		camera.position[X] = 0.001;
+		camera.position[Y] = 4;
+		camera.position[Z] = -7; //setting to 0 causes blank screen
 
 		camera.lookat[X] = 0;
 		camera.lookat[Y] = 0;
@@ -149,7 +160,7 @@ int ApplicationFinal::Initialize()
 		camera.worldup[Y] = 1.0;
 		camera.worldup[Z] = 0.0;
 
-		camera.FOV = 50.0;              /* degrees */
+		camera.FOV = 60.0;              /* degrees */
 
 		status |= GzPutCamera(m_pAARenders[aaPass], &camera); 
 
@@ -160,12 +171,12 @@ int ApplicationFinal::Initialize()
 		GzLight	light1 = { {-0.7071, 0.7071, 0}, {0.5, 0.5, 0.9} };
 		GzLight	light2 = { {0, -0.7071, -0.7071}, {0.9, 0.2, 0.3} };
 		GzLight	light3 = { {0.7071, 0.0, -0.7071}, {0.2, 0.7, 0.3} };
-		GzLight	ambientlight = { {0, 0, 0}, {0.3, 0.3, 0.3} };
+		GzLight	ambientlight = { {0, 0, 0}, {0.7, 0.7, 0.7} };
 
 		/* Material property */
 		GzColor specularCoefficient = { 0.3, 0.3, 0.3 };
-		GzColor ambientCoefficient = { 0.1, 0.1, 0.1 };
-		GzColor diffuseCoefficient = {0.7, 0.7, 0.7};
+		GzColor ambientCoefficient = { 2.0, 2.0, 2.0 };
+		GzColor diffuseCoefficient = {0.2, 0.2, 0.2};
 
 		/* 
 		renderer is ready for frame --- define lights and shader at start of frame 
@@ -305,6 +316,9 @@ int ApplicationFinal::Render()
 	nameListTriangle[2] = GZ_TEXTURE_INDEX;  
 
 	for (int fileIndex = 0; fileIndex < MODEL_COUNT; fileIndex++) {
+
+		ResetTexture();
+
 		// I/O File open
 		FILE *infile;
 		if( (infile  = fopen( ModelFiles[fileIndex], "r" )) == NULL )
@@ -320,6 +334,9 @@ int ApplicationFinal::Render()
 		nameListShader[2]  = GZ_REFRACTION_INDEX;
 		valueListShader[2] = (GzPointer)&refractionIndex;
 		nameListShader[3]  = GZ_REFRACTIVE;
+
+		nameListShader[4]  = GZ_TEXTURE_FILENAME;
+		valueListShader[4] = (GzPointer)ModelTexFiles[fileIndex];
 
 		if (IsModelReflective[fileIndex]) {
 			valueListShader[0] = (GzPointer)true;
@@ -349,7 +366,7 @@ int ApplicationFinal::Render()
 		}
 
 		for (int aaPass = 0; aaPass < AAKERNEL_SIZE; aaPass++) {
-			status |= GzPutAttribute(m_pAARenders[aaPass], 4, nameListShader, valueListShader);
+			status |= GzPutAttribute(m_pAARenders[aaPass], 5, nameListShader, valueListShader);
 		}
 
 		/* 

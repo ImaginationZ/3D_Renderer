@@ -19,7 +19,7 @@ int environmentReset = 1;
 float scaleToPositiveRange(float input);
 
 /* Image texture function */
-int tex_fun(float u, float v, GzColor color)
+int tex_fun(float u, float v, char* filename, GzColor color)
 {
   unsigned char		pixel[3];
   unsigned char     dummy;
@@ -28,7 +28,7 @@ int tex_fun(float u, float v, GzColor color)
   FILE			*fd;
 
   if (reset) {          /* open and load texture file */
-    fd = fopen ("texture", "rb");
+    fd = fopen (filename, "rb");
     if (fd == NULL) {
       fprintf (stderr, "texture file not found\n");
       exit(-1);
@@ -157,7 +157,7 @@ int cubetex_fun(GzCoord reflection, GzColor color) {
 	if (environmentReset) {
 		fd = fopen ("em_skybox.ppm", "rb");
 		if (fd == NULL) {
-			fprintf (stderr, "environment map texture file (em_output.ppm) not found\n");
+			fprintf (stderr, "environment map texture file (em_skybox.ppm) not found\n");
 			exit(-1);
 		}
 		fscanf (fd, "%s %d %d %c", foo, &texWidth, &texHeight, &dummy);
@@ -253,6 +253,12 @@ int GzFreeTexture()
 {
 	if(image!=NULL)
 		free(image);
+	return GZ_SUCCESS;
+}
+
+int ResetTexture()
+{
+	reset = 1;
 	return GZ_SUCCESS;
 }
 

@@ -57,9 +57,11 @@ typedef float   GzTextureIndex[2];
 typedef float   GzMatrix[4][4];
 typedef int	GzDepth;		/* z is signed for clipping */
 
-typedef	int	(*GzTexture)(float u, float v, GzColor color);	/* pointer to texture sampling method */
+typedef	int	(*GzTexture)(float u, float v, char* filename, GzColor color);	/* pointer to texture sampling method */
 typedef	int	(*GzCubeMap)(GzCoord reflection, GzColor color);
 /* u,v parameters [0,1] are defined tex_fun(float u, float v, GzColor color) */
+
+#define GZ_TEXTURE_FILENAME	1100
 
 /*
  * Gz camera definition

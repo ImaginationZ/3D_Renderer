@@ -695,6 +695,9 @@ int GzPutAttribute(GzRender	*render, int numAttributes, GzToken	*nameList,
 		case GZ_CUBE_MAP:
 			render->cubetex_fun = static_cast<GzCubeMap>(valueList[i]);
 			break;
+		case GZ_TEXTURE_FILENAME:
+			render->texture_filename = static_cast<char*>(valueList[i]);
+			break;
 		}
 	}
 
@@ -1052,9 +1055,14 @@ int GetColorAtNormal(GzRender* render, GzCoord normal, GzColor textureColor, GzC
 	GzColor ambient, diffuse, specular;
 
 	if (textureColor) {
+
 		//textured Phong
 		MultiplyVectorByCoefficient(render->ambientlight.color, textureColor, ambient);
+		MultiplyVectorByCoefficient(ambient, render->Ka, ambient);
+
 		MultiplyVectorByCoefficient(diffuseSum, textureColor, diffuse);
+		MultiplyVectorByCoefficient(diffuse, render->Kd, diffuse);
+
 		MultiplyVectorByCoefficient(specularSum, render->Ks, specular);
 	} else if (render->tex_fun == 0) {
 		//no texture
@@ -1198,7 +1206,7 @@ int RenderTriangle(GzRender *render, GzCoord* modelSpaceVerticies, GzCoord* mode
 							//texture color
 							interUV[U] = SolveForPlaneZ(uvPlanes[U], x, y) * GetPerspectiveFactor(newZ);
 							interUV[V] = SolveForPlaneZ(uvPlanes[V], x, y) * GetPerspectiveFactor(newZ);
-							render->tex_fun(interUV[U], interUV[V], textureColor);
+							render->tex_fun(interUV[U], interUV[V], render->texture_filename, textureColor);
 							MultiplyVectorByCoefficient(color, textureColor, color);
 						}
 
@@ -1229,7 +1237,7 @@ int RenderTriangle(GzRender *render, GzCoord* modelSpaceVerticies, GzCoord* mode
 							//texture color
 							interUV[U] = SolveForPlaneZ(uvPlanes[U], x, y) * GetPerspectiveFactor(newZ);
 							interUV[V] = SolveForPlaneZ(uvPlanes[V], x, y) * GetPerspectiveFactor(newZ);
-							render->tex_fun(interUV[U], interUV[V], textureColor);
+							render->tex_fun(interUV[U], interUV[V], render->texture_filename, textureColor);
 
 							GetColorAtNormal(render, interNormal, textureColor, &color);
 						} else {
